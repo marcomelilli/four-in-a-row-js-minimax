@@ -11,7 +11,7 @@ Minimax.min = function(x, y){
 
 Minimax.alphabeta = function(board, depth, a, b, maximizingPlayer) {
     var currentScore = board.getScore();
-    if (depth == 0 || currentScore <= -board.WINNING_SCORE  || currentScore >= board.WINNING_SCORE){ //|| TODO: board is full)
+    if (depth == 0 || currentScore <= -Config.WINNING_SCORE  || currentScore >= Config.WINNING_SCORE){ //|| TODO: board is full)
         var leaf = {
             "score" : board.getScore()
         };
@@ -20,14 +20,13 @@ Minimax.alphabeta = function(board, depth, a, b, maximizingPlayer) {
     
     //Set all valid moves in the current node (TODO: spostare in boardCanvas?)
     var nodes = [];
-    var player = maximizingPlayer ? board.HUMAN_PLAYER : board.COMPUTER_AI;
-    for(var column=0; column<board.COLUMNS_SIZE; column++){
+    var player = maximizingPlayer ? Config.HUMAN_PLAYER : Config.COMPUTER_AI;
+    for(var column=0; column<Config.COLUMNS_SIZE; column++){
         var nextPossibleBoard = board.placeMove(player, column, true);
         if(nextPossibleBoard) nodes[column] = nextPossibleBoard;   
     };  
 
     //TODO: Sort Nodes by best-child first
-
     if (maximizingPlayer){
         var v = {
             "columnMove" : null,

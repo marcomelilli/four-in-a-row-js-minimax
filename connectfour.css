@@ -1,0 +1,71 @@
+body {
+    font-family: monospace;
+}
+
+header {
+    text-align: center; 
+    margin:15px 0px 40px 0px;
+}
+
+header p{
+    font-size: 18px;
+}
+
+#alertsContainer{
+    margin-left:50px; 
+    width:400px; 
+    margin-bottom: -10px;
+}
+
+#winningAlert{
+    text-align: center;
+    margin-bottom: 5px; 
+    display: none;
+}
+
+#waitingAlert{
+    margin-bottom: 5px; 
+    display: none;
+}
+
+#scoreAlert{
+    margin-bottom: 5px;
+    font-size: 15px; 
+}
+
+#settings-box{
+    padding:60px 0px 0px 50px;
+}
+
+
+/**** MOBILE ****/
+
+@media only screen and (max-width: 768px) {
+    #settings-box{
+        padding: 0px 0px 30px 50px;
+    }
+    
+    #alertsContainer {
+        width: 90%;
+    }
+    
+    #alertsContainer{
+        width:100%; 
+        margin-bottom: 0px; 
+    }
+    
+    #scoreAlert{
+        padding: 10px 5px;
+        font-size: 13px;
+    }
+    
+    #waitingAlert {
+        margin-bottom: 0px;
+        font-size: 10px !important;
+    }
+    
+    canvas {
+        width:100%;
+        margin-left: 30px;
+    }
+}
