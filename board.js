@@ -27,6 +27,14 @@ function CanvasBoard(matrixBoard, game) {
 	this.stage = new createjs.Stage("boardGame");
 	this.currentgame = game;
 
+	this.ROWS_SIZE = 6;
+	this.COLUMNS_SIZE = 7;
+
+	this.HUMAN_PLAYER = 1;
+	this.COMPUTER_AI = 2;
+
+	this.WINNING_SCORE = 100000;
+
 	this.matrixBoard = JSON.parse(JSON.stringify(matrixBoard)) || [
 		[0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0],
@@ -84,9 +92,9 @@ CanvasBoard.prototype.refreshBoard = function () {
 	_.forEach(Board.matrixBoard, function (row, rowIndex) {
 		_.forEach(row, function (column, columnIndex) {
 			var checkerSpace = Board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-			if(Board.matrixBoard[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
+			if(Board.matrixBoard[rowIndex][columnIndex] == Board.HUMAN_PLAYER){
 				checkerSpace.graphics.beginFill("red").beginStroke("grey").drawCircle(0, 0, 23);
-			}else if(Board.matrixBoard[rowIndex][columnIndex] == Config.COMPUTER_AI){
+			}else if(Board.matrixBoard[rowIndex][columnIndex] == Board.COMPUTER_AI){
 				checkerSpace.graphics.beginFill("blue").beginStroke("grey").drawCircle(0, 0, 23);
 			}	
 		});
@@ -95,7 +103,7 @@ CanvasBoard.prototype.refreshBoard = function () {
 
 CanvasBoard.prototype.placeMove = function (player, columnMove, newBoard) {
 	var Board = newBoard ? new CanvasBoard(this.matrixBoard) : this;
-	for(var i = Config.ROWS_SIZE-1; i >= 0 ; i--){
+	for(var i = Board.ROWS_SIZE-1; i >= 0 ; i--){
 		if(Board.matrixBoard[i][columnMove] == 0){
 			Board.matrixBoard[i][columnMove] = player;
 			return Board;
@@ -127,7 +135,7 @@ CanvasBoard.prototype.getScore = function(){
 		var points = 0;
 		switch(HumanInRow){
 			case 4:
-				points += Config.WINNING_SCORE;
+				points += Board.WINNING_SCORE;
 				break;
 			case 3:
 				points += 5;
@@ -140,7 +148,7 @@ CanvasBoard.prototype.getScore = function(){
 		}
 		switch(ComputerInRow){
 			case 4:
-				points -= Config.WINNING_SCORE;
+				points -= Board.WINNING_SCORE;
 				break;
 			case 3:
 				points -= 5;
@@ -155,8 +163,8 @@ CanvasBoard.prototype.getScore = function(){
 	}
 
     //Check ROWS
-    for (var row=0; row < Config.ROWS_SIZE; row++){
-		for (var column=0; column <= Config.COLUMNS_SIZE - 4; column++){
+    for (var row=0; row < Board.ROWS_SIZE; row++){
+		for (var column=0; column <= Board.COLUMNS_SIZE - 4; column++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset = column; offset < column+4; offset++){
 				if(Board.matrixBoard[row][offset] == 1) {
@@ -168,13 +176,13 @@ CanvasBoard.prototype.getScore = function(){
 				}
 			}
 			score += updateScore(HumanInRow, ComputerInRow);
-			if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE) return score;
+			if(score <= -Board.WINNING_SCORE || score >= Board.WINNING_SCORE) return score;
 		}
 	}
 
 	//Check COLUMNS
-    for (var column=0; column < Config.COLUMNS_SIZE; column++){
-		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
+    for (var column=0; column < Board.COLUMNS_SIZE; column++){
+		for (var row=0; row <= Board.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
 				if(Board.matrixBoard[offset][column] == 1) {
@@ -186,13 +194,13 @@ CanvasBoard.prototype.getScore = function(){
 				}
 			}
 			score += updateScore(HumanInRow, ComputerInRow);
-			if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE) return score;
+			if(score <= -Board.WINNING_SCORE || score >= Board.WINNING_SCORE) return score;
 		}
 	}
 
 	//Check DIAGONALS
-	for (var column=0; column <= Config.COLUMNS_SIZE - 4; column++){
-		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
+	for (var column=0; column <= Board.COLUMNS_SIZE - 4; column++){
+		for (var row=0; row <= Board.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
 				if(Board.matrixBoard[offset][(offset-row) + column] == 1) {
@@ -204,11 +212,11 @@ CanvasBoard.prototype.getScore = function(){
 				}
 			}
 			score += updateScore(HumanInRow, ComputerInRow);
-			if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE) return score;
+			if(score <= -Board.WINNING_SCORE || score >= Board.WINNING_SCORE) return score;
 		}
 	}
-	for (var column=Config.COLUMNS_SIZE -1; column >= Config.COLUMNS_SIZE - 4; column--){
-		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
+	for (var column=Board.COLUMNS_SIZE -1; column >= Board.COLUMNS_SIZE - 4; column--){
+		for (var row=0; row <= Board.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
 				if(Board.matrixBoard[offset][column - (offset-row)] == 1) {
@@ -220,7 +228,7 @@ CanvasBoard.prototype.getScore = function(){
 				}
 			}
 			score += updateScore(HumanInRow, ComputerInRow);
-			if(score <= -Config.WINNING_SCORE || score >= Config.WINNING_SCORE) return score;
+			if(score <= -Board.WINNING_SCORE || score >= Board.WINNING_SCORE) return score;
 		}
 	}
 
