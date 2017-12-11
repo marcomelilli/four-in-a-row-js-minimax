@@ -38,55 +38,53 @@ function CanvasBoard(matrixBoard, game) {
 };
 
 CanvasBoard.prototype.initBoard = function () {
-	var Board = this;
-	Board.stage.name = "stage";
-	Board.stage.enableMouseOver(20);
+	var board = this;
+	board.stage.name = "stage";
+	board.stage.enableMouseOver(20);
 	
 	//Draw board
-	var boardBackground = Board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 });
+	var boardBackground = board.stage.addChild(new createjs.Shape()).set({ name: "background", x: 0, y: 0 });
 	boardBackground.graphics.beginFill("#0277BD").beginStroke("black").drawRect(60, 10, 380, 330);
 	boardBackground.graphics.beginFill("#01579B").beginStroke("black").drawRect(30, 330, 440, 20);
 
 	//Draw checkers
-	Board.checkerSpaceContainer = Board.stage.addChild(new createjs.Container()).set({ name: "board" });
-	_.forEach(Board.matrixBoard, function (row, rowIndex) {
+	board.checkerSpaceContainer = board.stage.addChild(new createjs.Container()).set({ name: "board" });
+	_.forEach(board.matrixBoard, function (row, rowIndex) {
 		_.forEach(row, function (column, columnIndex) {
-			var checkerSpace = Board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 100 + (50 * columnIndex), y: 50 + (50 * rowIndex) });
+			var checkerSpace = board.checkerSpaceContainer.addChild(new createjs.Shape()).set({ name: "cs-" + rowIndex + columnIndex, x: 100 + (50 * columnIndex), y: 50 + (50 * rowIndex) });
 			checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23);
-			//checkerSpace.cursor = "pointer";
-			checkerSpace.addEventListener("click", (Board.currentgame.placeHumanMove).bind(Board.currentgame) );
+			checkerSpace.cursor = "pointer";
+			checkerSpace.addEventListener("click", (board.currentgame.placeHumanMove).bind(board.currentgame) );
 		});
 	});
-	//TODO: non funziona
-	Board.stage.on('click', function(e){
-		if(Board.isClickDisabled){
+	board.stage.on('click', function(e){
+		if(board.isClickDisabled){
 			e.stopPropagation();
 		};
 	}, null, false, {}, true);
 
-	// call update on the stage to make it render the current display list to the canvas:
-	createjs.Ticker.addEventListener("tick", Board.stage);
+	createjs.Ticker.addEventListener("tick", board.stage);
 }
 
 CanvasBoard.prototype.resetBoard = function () {
-	var Board = this;
-	_.forEach(Board.matrixBoard, function (row, rowIndex) {
+	var board = this;
+	_.forEach(board.matrixBoard, function (row, rowIndex) {
 		_.forEach(row, function (column, columnIndex) {
-			var checkerSpace = Board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
+			var checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
 			checkerSpace.graphics.beginFill("#FFFF").beginStroke("grey").drawCircle(0, 0, 23);
-			Board.matrixBoard[rowIndex][columnIndex] = 0 ;
+			board.matrixBoard[rowIndex][columnIndex] = 0 ;
 		});
 	});
 }
 
 CanvasBoard.prototype.refreshBoard = function () {
-	var Board = this;
-	_.forEach(Board.matrixBoard, function (row, rowIndex) {
+	var board = this;
+	_.forEach(board.matrixBoard, function (row, rowIndex) {
 		_.forEach(row, function (column, columnIndex) {
-			var checkerSpace = Board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
-			if(Board.matrixBoard[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
+			var checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
+			if(board.matrixBoard[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
 				checkerSpace.graphics.beginFill("red").beginStroke("grey").drawCircle(0, 0, 23);
-			}else if(Board.matrixBoard[rowIndex][columnIndex] == Config.COMPUTER_AI){
+			}else if(board.matrixBoard[rowIndex][columnIndex] == Config.COMPUTER_AI){
 				checkerSpace.graphics.beginFill("blue").beginStroke("grey").drawCircle(0, 0, 23);
 			}	
 		});
@@ -94,11 +92,11 @@ CanvasBoard.prototype.refreshBoard = function () {
 }
 
 CanvasBoard.prototype.placeMove = function (player, columnMove, newBoard) {
-	var Board = newBoard ? new CanvasBoard(this.matrixBoard) : this;
+	var board = newBoard ? new CanvasBoard(this.matrixBoard) : this;
 	for(var i = Config.ROWS_SIZE-1; i >= 0 ; i--){
-		if(Board.matrixBoard[i][columnMove] == 0){
-			Board.matrixBoard[i][columnMove] = player;
-			return Board;
+		if(board.matrixBoard[i][columnMove] == 0){
+			board.matrixBoard[i][columnMove] = player;
+			return board;
 		}
 	}
 	return false;
@@ -116,13 +114,23 @@ CanvasBoard.prototype.disableClick = function(){
 	this.isClickDisabled = true;
 }
 
+CanvasBoard.prototype.isFull = function(){
+	var board = this;
+	for(var column=0; column<Config.COLUMNS_SIZE; column++){
+        var atLeastOneEmpty = false;
+		if(board.matrixBoard[0][column] == 0){
+			atLeastOneEmpty = true;
+			break;
+		}
+    };
+	return !atLeastOneEmpty;
+}
+
 CanvasBoard.prototype.getScore = function(){
-    var Board = this;
+    var board = this;
 
 	var score = 0;
 
-    //TODO: pareggio isFull
-    
 	function updateScore(HumanInRow, ComputerInRow){
 		var points = 0;
 		switch(HumanInRow){
@@ -159,10 +167,10 @@ CanvasBoard.prototype.getScore = function(){
 		for (var column=0; column <= Config.COLUMNS_SIZE - 4; column++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset = column; offset < column+4; offset++){
-				if(Board.matrixBoard[row][offset] == 1) {
+				if(board.matrixBoard[row][offset] == 1) {
 					HumanInRow++ ;
 					ComputerInRow = 0
-				} else if(Board.matrixBoard[row][offset] == 2){
+				} else if(board.matrixBoard[row][offset] == 2){
 					ComputerInRow++ ;
 					HumanInRow = 0
 				}
@@ -177,10 +185,10 @@ CanvasBoard.prototype.getScore = function(){
 		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
-				if(Board.matrixBoard[offset][column] == 1) {
+				if(board.matrixBoard[offset][column] == 1) {
 					HumanInRow++ ;
 					ComputerInRow = 0
-				} else if(Board.matrixBoard[offset][column] == 2){
+				} else if(board.matrixBoard[offset][column] == 2){
 					ComputerInRow++ ;
 					HumanInRow = 0
 				}
@@ -195,10 +203,10 @@ CanvasBoard.prototype.getScore = function(){
 		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
-				if(Board.matrixBoard[offset][(offset-row) + column] == 1) {
+				if(board.matrixBoard[offset][(offset-row) + column] == 1) {
 					HumanInRow++ ;
 					ComputerInRow = 0
-				} else if(Board.matrixBoard[offset][(offset-row) + column] == 2){
+				} else if(board.matrixBoard[offset][(offset-row) + column] == 2){
 					ComputerInRow++ ;
 					HumanInRow = 0
 				}
@@ -211,10 +219,10 @@ CanvasBoard.prototype.getScore = function(){
 		for (var row=0; row <= Config.ROWS_SIZE - 4; row++){
 			var HumanInRow = 0, ComputerInRow = 0;
 			for (var offset=row; offset < row+4; offset++){
-				if(Board.matrixBoard[offset][column - (offset-row)] == 1) {
+				if(board.matrixBoard[offset][column - (offset-row)] == 1) {
 					HumanInRow++ ;
 					ComputerInRow = 0
-				} else if(Board.matrixBoard[offset][column - (offset-row)] == 2){
+				} else if(board.matrixBoard[offset][column - (offset-row)] == 2){
 					ComputerInRow++ ;
 					HumanInRow = 0
 				}

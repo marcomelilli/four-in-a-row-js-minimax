@@ -7,7 +7,7 @@ if( 'function' === typeof importScripts) {
 	this.addEventListener('message', function(ev) {
 		var params = JSON.parse(ev.data);
 		var Board = new CanvasBoard(params.matrixBoard);
-		var newmove = Minimax.alphabeta(Board, params.depth, {"score": -99999}, {"score": 99999}, params.maximizingPlayer);
+		var newmove = Minimax.alphabeta(Board, params.depth, {"score": -9999999}, {"score": 9999999}, params.maximizingPlayer);
 		this.postMessage(newmove);
 	}, false);
 
@@ -26,22 +26,25 @@ Minimax.min = function(x, y){
 
 Minimax.alphabeta = function(board, depth, a, b, maximizingPlayer) {
     var currentScore = board.getScore();
-    if (depth == 0 || currentScore <= -Config.WINNING_SCORE  || currentScore >= Config.WINNING_SCORE){ //|| TODO: board is full)
-        var leaf = {
-            "score" : board.getScore()
-        };
-        return leaf
-    }
-    
-    //Set all valid moves in the current node (TODO: spostare in boardCanvas?)
     var nodes = [];
+
+    //Check all possible moves
     var player = maximizingPlayer ? Config.HUMAN_PLAYER : Config.COMPUTER_AI;
     for(var column=0; column<Config.COLUMNS_SIZE; column++){
         var nextPossibleBoard = board.placeMove(player, column, true);
         if(nextPossibleBoard) nodes[column] = nextPossibleBoard;   
     };  
 
-    //TODO: Sort Nodes by best-child first
+    var isDrawn = nodes.length == 0;
+
+    if (depth == 0 || isDrawn || currentScore <= -Config.WINNING_SCORE  || currentScore >= Config.WINNING_SCORE){
+        var leaf = {
+            "columnMove" : null,
+            "score" : currentScore
+        };
+        return leaf
+    }
+    
     if (maximizingPlayer){
         var v = {
             "columnMove" : null,

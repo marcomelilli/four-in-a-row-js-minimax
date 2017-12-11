@@ -10,7 +10,6 @@ function Game() {
 Game.prototype.placeHumanMove = function(evt) {
 	var Game = this;
 
-
 	var checkerSpace = evt.currentTarget.name;
 	var columnIndex = checkerSpace[checkerSpace.length -1];
 
@@ -77,12 +76,13 @@ Game.prototype.switchTurn = function(){
     }
 
     var score = game.Board.getScore();
+    var isDrawn = game.Board.isFull()
     document.getElementById("score").innerHTML = score;
     
-    if(score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
-        $("#winningAlert").show()
-       document.getElementById("winningAlert").innerHTML = score>0 ? "You Win!" : "AI Wins!";
-        $("#scoreAlert").hide();
+    if( isDrawn || score > Config.WINNING_SCORE - 100 || score < -Config.WINNING_SCORE + 100){
+        $("#winningAlert").show(); $("#scoreAlert").hide(); $("#waitingAlert").hide();
+        document.getElementById("winningAlert").innerHTML = isDrawn ? "The game is drawn!" : ( score > 0 ? "You Win!" : "AI Wins!");
+
         game.Board.disableClick();
     } else {
         if (game.turn == Config.COMPUTER_AI ){
