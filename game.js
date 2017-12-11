@@ -28,8 +28,6 @@ Game.prototype.generateComputerMove = function() {
 	var depth = $("#depthSelect").val();
     var board = new CanvasBoard(game.Board.matrixBoard, game);
 
-    
-
 	game.worker.addEventListener('message', function handler(e) {
         var bestMove = e.data;
 

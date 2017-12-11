@@ -83,9 +83,9 @@ CanvasBoard.prototype.refreshBoard = function () {
 		_.forEach(row, function (column, columnIndex) {
 			var checkerSpace = board.checkerSpaceContainer.getChildByName("cs-" + rowIndex + columnIndex);
 			if(board.matrixBoard[rowIndex][columnIndex] == Config.HUMAN_PLAYER){
-				checkerSpace.graphics.beginFill("red").beginStroke("grey").drawCircle(0, 0, 23);
+				checkerSpace.graphics.beginFill("#f70202").beginStroke("grey").drawCircle(0, 0, 23);
 			}else if(board.matrixBoard[rowIndex][columnIndex] == Config.COMPUTER_AI){
-				checkerSpace.graphics.beginFill("blue").beginStroke("grey").drawCircle(0, 0, 23);
+				checkerSpace.graphics.beginFill("#ffc107").beginStroke("grey").drawCircle(0, 0, 23);
 			}	
 		});
 	});
@@ -105,9 +105,7 @@ CanvasBoard.prototype.placeMove = function (player, columnMove, newBoard) {
 
 CanvasBoard.prototype.enableClick = function(){
 	var board = this;
-	setTimeout(function() {
-		board.isClickDisabled = false;
-	}, 100);
+	board.isClickDisabled = false;
 }
 
 CanvasBoard.prototype.disableClick = function(){
