@@ -1,10 +1,12 @@
 # Four in a row - AI
-This project is an implementation in javascript of the algorithm [minimax](https://en.wikipedia.org/wiki/Minimax) with [Alpha-Beta](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning)` pruning applied to the game `Connect Four`.
+This project is an implementation in javascript of the algorithm [minimax](https://en.wikipedia.org/wiki/Minimax) with [Alpha-Beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning) applied to the game `Connect Four`.
 
 It uses [EaselJs](www.createjs.com/easeljs) for drawing the board, as support for working with the HTML5 Canvas element.
 
 # Example
 You can find here a [live demo](http://connectfour.mmelilli.com)
+
+![game screenshot](https://github.com/marcomelilli/four-in-a-row-js-minimax/raw/master/img/game-screen.png)
 
 # Running Locally
 The AI is runned in background in another thread thanks to [WebWorkers](https://en.wikipedia.org/wiki/Web_worker). For this reason, if you are using Chrome to run the project, be sure to close all the tabs and run it as:
