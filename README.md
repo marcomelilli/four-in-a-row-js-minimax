@@ -4,7 +4,7 @@ This project is an implementation in javascript of the algorithm [minimax](https
 It uses [EaselJs](https://www.createjs.com/easeljs) for drawing the board, as support for working with the HTML5 Canvas element.
 
 # Example
-You can find here a [live demo](http://connectfour.mmelilli.com)!
+You can find here a [live demo](http://connectfour.marcomelilli.com)!
 
 ![game screenshot](https://github.com/marcomelilli/four-in-a-row-js-minimax/raw/master/img/game-screen.png)
 
